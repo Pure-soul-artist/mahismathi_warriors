@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 import aiosqlite
 import os
 
@@ -24,6 +24,54 @@ async def manual_order(item_id: int):
 @router.put("/{order_id}/fulfill")
 async def fulfill_order(order_id: int):
     async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute("UPDATE restock_orders SET status='fulfilled' WHERE id=?", (order_id,))
+        db.row_factory = aiosqlite.Row
+        
+        # Get the order details first
+        order = await (await db.execute(
+            "SELECT * FROM restock_orders WHERE id=?", (order_id,)
+        )).fetchone()
+        
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        
+        if order["status"] == "fulfilled":
+            raise HTTPException(status_code=400, detail="Order already fulfilled")
+        
+        # Mark order as fulfilled
+        await db.execute(
+            "UPDATE restock_orders SET status='fulfilled' WHERE id=?",
+            (order_id,)
+        )
+        
+        # Add the ordered quantity back to inventory
+        await db.execute(
+            """UPDATE inventory_items 
+               SET current_stock = current_stock + ?,
+                   last_updated = CURRENT_TIMESTAMP
+               WHERE id = ?""",
+            (order["quantity_ordered"], order["item_id"])
+        )
+        
+        # Recalculate status after stock update
+        item = await (await db.execute(
+            "SELECT * FROM inventory_items WHERE id=?", (order["item_id"],)
+        )).fetchone()
+        
+        if item:
+            stock = item["current_stock"]
+            base = item["base_threshold"]
+            if stock <= base // 2:
+                new_status = "critical"
+            elif stock <= base:
+                new_status = "low"
+            else:
+                new_status = "ok"
+            
+            await db.execute(
+                "UPDATE inventory_items SET status=? WHERE id=?",
+                (new_status, item["id"])
+            )
+        
         await db.commit()
-    return {"message": "Marked fulfilled"}
+    
+    return {"message": "Order fulfilled and inventory updated"}
