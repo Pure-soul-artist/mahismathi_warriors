@@ -8,13 +8,14 @@ venv/
 
 # Node
 node_modules/
-dist/
-.DS_Store
+package-lock.json
 
-# Vite
+# Vite / Build
 frontend/.env
 frontend/dist/
+dist/
 
-# IDE
+# OS / IDE
 .vscode/
 *.log
+.DS_Store
