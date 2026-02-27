@@ -21,11 +21,13 @@ async def create_order(item_id: int, triggered_by: str = "auto"):
         quantity = item["max_capacity"] - item["current_stock"]
         peak = is_peak_hour()
 
+        await send_restock_email(item["name"], quantity, peak)
+        email_sent = 1 if send_restock_email(item["name"], quantity, peak) else 0
         await db.execute("""
-            INSERT INTO restock_orders (item_id, item_name, quantity_ordered, triggered_by, is_peak_hour)
-            VALUES (?, ?, ?, ?, ?)
-        """, (item_id, item["name"], quantity, triggered_by, int(peak)))
+            INSERT INTO restock_orders (item_id, item_name, quantity_ordered, triggered_by, is_peak_hour, email_sent)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (item_id, item["name"], quantity, triggered_by, int(peak), int(email_sent)))
         await db.commit()
 
-        await send_restock_email(item["name"], quantity, peak)
+        
         return quantity

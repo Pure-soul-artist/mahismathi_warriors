@@ -12,4 +12,4 @@ def start_scheduler():
         replace_existing=True
     )
     scheduler.start()
-    print("⏱️  Scheduler started — checking every 60 seconds")
+    print("Scheduler started — checking every 60 seconds")
