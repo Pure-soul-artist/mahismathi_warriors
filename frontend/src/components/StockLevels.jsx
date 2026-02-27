@@ -1,15 +1,9 @@
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
 } from "recharts";
 import { motion } from "framer-motion";
 
-export default function StockLevels({ inventory = [] }) {
+export default function StockLevels({ inventory = [], onFulfill }) {
 
   const chartData = inventory.map(item => ({
     name: item.name,
