@@ -1,7 +1,5 @@
 import aiosqlite
-import asyncio
-
-DB_PATH = "inventory.db"
+from config import DB_PATH
 
 async def get_db():
     async with aiosqlite.connect(DB_PATH) as db:
