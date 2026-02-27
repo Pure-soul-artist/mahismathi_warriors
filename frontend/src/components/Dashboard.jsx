@@ -9,109 +9,135 @@ export default function Dashboard({ inventory = [], orders = [] }) {
     o => new Date(o.triggered_at).toDateString() === today
   ).length;
 
-  const stats = [
+  const kpis = [
     {
       label: "Total Items",
       value: inventory.length,
-      bg: "bg-blue-100",
-      text: "text-blue-900"
+      bg: "bg-gradient-to-br from-sky-100 to-sky-200",
+      text: "text-sky-900"
     },
     {
       label: "Low Stock",
       value: low,
-      bg: "bg-yellow-100",
-      text: "text-yellow-900"
+      bg: "bg-gradient-to-br from-amber-100 to-amber-200",
+      text: "text-amber-900"
     },
     {
       label: "Critical",
       value: critical,
-      bg: "bg-red-100",
-      text: "text-red-900"
+      bg: "bg-gradient-to-br from-rose-100 to-rose-200",
+      text: "text-rose-900"
     },
     {
       label: "Orders Today",
       value: ordersToday,
-      bg: "bg-green-100",
-      text: "text-green-900"
+      bg: "bg-gradient-to-br from-emerald-100 to-emerald-200",
+      text: "text-emerald-900"
+    }
+  ];
+
+  const insights = [
+    {
+      label: "Healthy Items",
+      value: inventory.length - low - critical,
+      bg: "bg-gradient-to-br from-emerald-50 to-emerald-100",
+      text: "text-emerald-900"
+    },
+    {
+      label: "Reorder Required",
+      value: low + critical,
+      bg: "bg-gradient-to-br from-amber-50 to-amber-100",
+      text: "text-amber-900"
+    },
+    {
+      label: "Total Orders",
+      value: orders.length,
+      bg: "bg-gradient-to-br from-sky-50 to-sky-100",
+      text: "text-sky-900"
     }
   ];
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center px-8 py-6"
+      className="rounded-3xl p-10 space-y-20 bg-cover bg-center"
       style={{
         backgroundImage:
-          "url('https://images.unsplash.com/photo-1628964178609-aec11c666040?q=80&w=1171&auto=format&fit=crop')"
+          "url('https://images.unsplash.com/photo-1569154941061-e231b4725ef1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0')"
       }}
     >
       {/* HEADER */}
-      <div className="flex justify-between items-center mb-10">
-        <div className="bg-white/90 px-6 py-4 rounded-xl shadow">
-          <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
-            ✈ Airport Lounge Inventory
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-semibold text-white tracking-tight">
+            Dashboard Overview
           </h1>
-          <p className="text-sm text-slate-600 mt-1">
-            Automated Replenishment • Live Status
+          <p className="text-sm text-white/80 mt-1">
+            Real-time inventory health & activity
           </p>
         </div>
 
-        <div className="bg-white/90 px-4 py-2 rounded-lg text-sm text-slate-600 shadow">
+        <div className="px-4 py-2 rounded-lg bg-white/90 shadow text-sm text-slate-700">
           {today}
         </div>
       </div>
 
-      {/* KPI CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        {stats.map((item, index) => (
+      {/* KPI SECTION */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {kpis.map((item, index) => (
           <motion.div
             key={item.label}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.08 }}
+            transition={{ delay: index * 0.07 }}
             className={`
               ${item.bg}
-              rounded-xl
-              px-5 py-4
+              rounded-2xl
+              px-6 py-5
               shadow-md
+              hover:scale-[1.02]
+              transition
             `}
           >
-            <p className="text-xs uppercase tracking-wide text-slate-600">
+            <p className="text-xs uppercase tracking-wide text-slate-700">
               {item.label}
             </p>
-            <p className={`mt-2 text-3xl font-semibold ${item.text}`}>
+            <p className={`mt-2 text-3xl font-bold ${item.text}`}>
               {item.value}
             </p>
           </motion.div>
         ))}
       </div>
 
-      {/* INSIGHTS */}
-      <div className="bg-white rounded-xl p-6 shadow-lg max-w-5xl">
-        <h2 className="text-lg font-semibold text-slate-800 mb-6">
+      {/* OPERATIONAL INSIGHTS */}
+      <div>
+        <h2 className="text-xl font-semibold text-white mb-6">
           Operational Insights
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-slate-100 rounded-lg p-4">
-            <p className="text-xs text-slate-500">Healthy Items</p>
-            <p className="text-2xl font-semibold text-slate-900 mt-1">
-              {inventory.length - low - critical}
-            </p>
-          </div>
-
-          <div className="bg-slate-100 rounded-lg p-4">
-            <p className="text-xs text-slate-500">Reorder Required</p>
-            <p className="text-2xl font-semibold text-slate-900 mt-1">
-              {low + critical}
-            </p>
-          </div>
-
-          <div className="bg-slate-100 rounded-lg p-4">
-            <p className="text-xs text-slate-500">Total Orders</p>
-            <p className="text-2xl font-semibold text-slate-900 mt-1">
-              {orders.length}
-            </p>
-          </div>
+          {insights.map((item, index) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.08 }}
+              className={`
+                ${item.bg}
+                rounded-2xl
+                px-6 py-6
+                shadow-sm
+                hover:shadow-md
+                transition
+              `}
+            >
+              <p className="text-xs uppercase tracking-wide text-slate-700">
+                {item.label}
+              </p>
+              <p className={`mt-3 text-3xl font-semibold ${item.text}`}>
+                {item.value}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>
