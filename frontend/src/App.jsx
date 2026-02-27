@@ -37,19 +37,19 @@ export default function App() {
   }, []);
 
   return (
-    /* ===== GLOBAL BACKGROUND ===== */
+    /* ===== GLOBAL BACKGROUND (FULL WEBSITE) ===== */
     <div
-      className="min-h-screen bg-cover bg-center bg-fixed relative"
+      className="min-h-screen w-full bg-cover bg-center bg-fixed relative"
       style={{
         backgroundImage:
-          "url('https://images.unsplash.com/photo-1628964178609-aec11c666040?q=80&w=1600&auto=format&fit=crop')"
+          "url('https://images.unsplash.com/photo-1529074963764-98f45c47344b?q=80&w=2086&auto=format&fit=crop')"
       }}
     >
-      {/* GLOBAL LIGHT OVERLAY */}
-      <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />
+      {/* GLOBAL OVERLAY (READABILITY) */}
+      <div className="fixed inset-0 bg-black/15 backdrop-blur-sm -z-10" />
 
-      {/* CONTENT WRAPPER */}
-      <div className="relative z-10">
+      {/* CONTENT LAYER */}
+      <div className="relative z-10 min-h-screen flex flex-col">
         {/* ===== HEADER ===== */}
         <motion.div
           initial={{ opacity: 0, y: -25 }}
@@ -102,30 +102,56 @@ export default function App() {
         <AlertBanner inventory={inventory} />
 
         {/* TABS */}
-        <div className="bg-white/90 backdrop-blur border-b px-6 flex gap-4 shadow-sm justify-center">
-          {["dashboard", "stock", "inventory", "orders"].map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`py-3 px-4 font-medium border-b-2 transition-all ${
-                activeTab === tab
-                  ? "border-sky-600 text-sky-700"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              {tab === "dashboard"
-                ? "📊 Dashboard"
-                : tab === "stock"
-                ? "📦 Stock Levels"
-                : tab === "inventory"
-                ? "🧾 Inventory"
-                : "📋 Orders"}
-            </button>
-          ))}
-        </div>
-
+       <div
+  className="
+    sticky top-0 z-20
+    px-6
+    flex gap-6 justify-center
+    backdrop-blur-xl
+    bg-white/20
+    border-b border-white/30
+    shadow-[0_20px_50px_rgba(0,0,0,0.25)]
+  "
+></div>
+<div
+  className="
+    sticky top-0 z-20
+    px-6
+    flex gap-6 justify-center
+    backdrop-blur-xl
+    bg-white/20
+    border-b border-white/30
+    shadow-[0_20px_50px_rgba(0,0,0,0.25)]
+  "
+>
+  {["dashboard", "stock", "inventory", "orders"].map(tab => (
+    <button
+      key={tab}
+      onClick={() => setActiveTab(tab)}
+      className={`
+        py-4 px-5
+        font-bold
+        tracking-wide
+        transition-all duration-300
+        ${
+          activeTab === tab
+            ? "text-sky-700 border-b-2 border-sky-600"
+            : "text-slate-700 hover:text-slate-900"
+        }
+      `}
+    >
+      {tab === "dashboard"
+        ? "📊 Dashboard"
+        : tab === "stock"
+        ? "📦 Stock Levels"
+        : tab === "inventory"
+        ? "🧾 Inventory"
+        : "📋 Orders"}
+    </button>
+  ))}
+</div>
         {/* PAGE CONTENT */}
-        <div className="p-6">
+        <div className="p-6 flex-1">
           {activeTab === "dashboard" && (
             <Dashboard inventory={inventory} orders={orders} />
           )}

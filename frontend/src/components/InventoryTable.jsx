@@ -73,7 +73,8 @@ export default function InventoryTable({ inventory = [], refresh }) {
         );
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-slate-100 via-white to-slate-200 font-['Inter']">
+    /* 🌑 DARK TRANSPARENT PAGE */
+    <div className="p-8 font-['Inter']">
       {/* HEADER */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
@@ -81,16 +82,10 @@ export default function InventoryTable({ inventory = [], refresh }) {
         transition={{ duration: 0.5 }}
         className="mb-8 text-center"
       >
-        <h1
-          className="
-            text-4xl font-extrabold tracking-tight
-            bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-rose-500
-            bg-clip-text text-transparent
-          "
-        >
+        <h1 className="text-4xl font-extrabold text-slate-900">
           Inventory Management
         </h1>
-        <p className="mt-2 text-slate-500">
+        <p className="mt-2 text-slate-700 font-medium">
           Real-time control with intelligent actions
         </p>
       </motion.div>
@@ -104,9 +99,9 @@ export default function InventoryTable({ inventory = [], refresh }) {
             exit={{ opacity: 0 }}
             className="
               mb-6 mx-auto w-fit
-              bg-emerald-100 text-emerald-900
+              bg-emerald-500/90 text-white
               px-6 py-3 rounded-xl
-              shadow-lg font-medium
+              shadow-lg font-semibold
             "
           >
             {toast}
@@ -121,10 +116,10 @@ export default function InventoryTable({ inventory = [], refresh }) {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-1.5 rounded-full text-sm capitalize transition-all ${
+              className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
                 filter === f
-                  ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
-                  : "bg-white text-slate-600 shadow hover:shadow-md"
+                  ? "bg-slate-900 text-white shadow-lg"
+                  : "bg-white/40 backdrop-blur text-slate-800 hover:bg-white/60"
               }`}
             >
               {f}
@@ -135,10 +130,10 @@ export default function InventoryTable({ inventory = [], refresh }) {
         <button
           onClick={() => setShowAdd(!showAdd)}
           className="
-            bg-gradient-to-r from-emerald-500 to-teal-500
-            text-white px-6 py-2 rounded-full
+            bg-slate-900 text-white
+            px-6 py-2 rounded-full
             shadow-lg hover:shadow-xl transition
-            font-medium
+            font-semibold
           "
         >
           + Add Item
@@ -154,9 +149,10 @@ export default function InventoryTable({ inventory = [], refresh }) {
             exit={{ opacity: 0 }}
             className="
               mb-8
-              bg-white/80 backdrop-blur-xl
+              bg-black/40 backdrop-blur-2xl
+              border border-white/20
               rounded-3xl p-6
-              shadow-[0_30px_70px_rgba(0,0,0,0.15)]
+              shadow-[0_40px_120px_rgba(0,0,0,0.8)]
               grid grid-cols-2 md:grid-cols-3 gap-4
             "
           >
@@ -190,9 +186,8 @@ export default function InventoryTable({ inventory = [], refresh }) {
               onClick={handleAdd}
               className="
                 col-span-2 md:col-span-3
-                bg-gradient-to-r from-indigo-600 to-purple-600
-                text-white py-3 rounded-xl
-                font-semibold shadow-lg
+                bg-slate-900 text-white py-3 rounded-xl
+                font-bold shadow-lg
               "
             >
               Save Item
@@ -204,13 +199,14 @@ export default function InventoryTable({ inventory = [], refresh }) {
       {/* TABLE */}
       <div
         className="
-          bg-white/80 backdrop-blur-xl
+          bg-black/40 backdrop-blur-2xl
+          border border-white/20
           rounded-3xl overflow-hidden
-          shadow-[0_30px_70px_rgba(0,0,0,0.15)]
+          shadow-[0_40px_120px_rgba(0,0,0,0.8)]
         "
       >
         <table className="w-full text-sm">
-          <thead className="bg-slate-100 text-slate-600 uppercase text-xs">
+          <thead className="sticky top-0 bg-black/60 text-white uppercase text-xs">
             <tr>
               {["Name", "Category", "Stock", "Threshold", "Unit", "Status", "Updated", "Actions"].map(h => (
                 <th key={h} className="px-4 py-4 text-left">{h}</th>
@@ -218,7 +214,7 @@ export default function InventoryTable({ inventory = [], refresh }) {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-white/10">
             {filtered.map(item => {
               const badge = getStatusBadge(item.status);
               return (
@@ -226,10 +222,21 @@ export default function InventoryTable({ inventory = [], refresh }) {
                   key={item.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+                  className={
+                    item.status === "critical"
+                      ? "bg-red-500/10"
+                      : item.status === "low"
+                      ? "bg-yellow-400/10"
+                      : ""
+                  }
                 >
-                  <td className="px-4 py-4 font-medium">{item.name}</td>
-                  <td className="px-4 py-4 capitalize">{item.category}</td>
+                  <td className="px-4 py-4 font-semibold text-white">
+                    {item.name}
+                  </td>
+                  <td className="px-4 py-4 capitalize text-white/80">
+                    {item.category}
+                  </td>
 
                   <td className="px-4 py-4">
                     {editId === item.id ? (
@@ -249,19 +256,19 @@ export default function InventoryTable({ inventory = [], refresh }) {
                           setEditId(item.id);
                           setEditVal(item.current_stock);
                         }}
-                        className="cursor-pointer text-indigo-600 font-bold hover:underline"
+                        className="cursor-pointer text-sky-400 font-bold hover:underline"
                       >
                         {item.current_stock}
                       </span>
                     )}
                   </td>
 
-                  <td className="px-4 py-4">{item.base_threshold}</td>
-                  <td className="px-4 py-4">{item.unit}</td>
+                  <td className="px-4 py-4 text-white/80">{item.base_threshold}</td>
+                  <td className="px-4 py-4 text-white/80">{item.unit}</td>
                   <td className="px-4 py-4">
                     <span className={badge.className}>{badge.label}</span>
                   </td>
-                  <td className="px-4 py-4 text-xs text-slate-400">
+                  <td className="px-4 py-4 text-xs text-white/50">
                     {new Date(item.last_updated).toLocaleString()}
                   </td>
                   <td className="px-4 py-4">

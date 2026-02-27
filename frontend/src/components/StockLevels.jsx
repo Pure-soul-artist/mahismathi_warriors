@@ -10,7 +10,6 @@ import {
 import { motion } from "framer-motion";
 
 export default function StockLevels({ inventory = [] }) {
-
   const chartData = inventory.map(item => ({
     name: item.name,
     stock: item.current_stock,
@@ -26,12 +25,13 @@ export default function StockLevels({ inventory = [] }) {
       case "critical":
         return "url(#criticalGradient)";
       default:
-        return "#94a3b8";
+        return "#64748b";
     }
   };
 
   return (
-    <div className="min-h-screen p-10 bg-gradient-to-br from-slate-100 via-white to-slate-200 font-['Inter']">
+    /* ✅ TRANSPARENT DARK WRAPPER */
+    <div className="p-10 font-['Inter']">
       {/* HEADER */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
@@ -39,47 +39,46 @@ export default function StockLevels({ inventory = [] }) {
         transition={{ duration: 0.6 }}
         className="mb-10 text-center"
       >
-        <h1
-          className="
-            text-4xl md:text-5xl font-extrabold tracking-tight
-            bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-rose-500
-            bg-clip-text text-transparent
-          "
-        >
-          Stock Intelligence Dashboard
-        </h1>
-        <p className="mt-3 text-slate-500 tracking-wide">
-          Real-time inventory health with predictive insights
-        </p>
+    <h1
+  className="
+    text-4xl md:text-5xl font-extrabold tracking-tight
+    text-slate-900
+  "
+>
+  Stock Intelligence Dashboard
+</h1>
+
+<p className="mt-3 text-slate-700 tracking-wide font-medium">
+  Real-time inventory health with predictive insights
+</p>
       </motion.div>
 
-      {/* CARD */}
+      {/* 🔥 DARK GLASS CARD */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
         className="
-          bg-white/80 backdrop-blur-xl
+          backdrop-blur-2xl
+          bg-black/45
+          border border-white/15
           rounded-3xl p-8
-          shadow-[0_30px_70px_rgba(0,0,0,0.15)]
+          shadow-[0_40px_120px_rgba(0,0,0,0.9)]
         "
       >
         <ResponsiveContainer width="100%" height={420}>
           <BarChart data={chartData} layout="vertical">
             <defs>
-              {/* OK gradient */}
               <linearGradient id="okGradient" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#22c55e" />
                 <stop offset="100%" stopColor="#4ade80" />
               </linearGradient>
 
-              {/* LOW gradient */}
               <linearGradient id="lowGradient" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#facc15" />
                 <stop offset="100%" stopColor="#fb923c" />
               </linearGradient>
 
-              {/* CRITICAL gradient */}
               <linearGradient id="criticalGradient" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#f43f5e" />
                 <stop offset="100%" stopColor="#dc2626" />
@@ -88,29 +87,31 @@ export default function StockLevels({ inventory = [] }) {
 
             <XAxis
               type="number"
-              tick={{ fill: "#475569", fontSize: 12 }}
+              tick={{ fill: "#e5e7eb", fontSize: 12 }}
               axisLine={false}
             />
             <YAxis
               type="category"
               dataKey="name"
               width={160}
-              tick={{ fill: "#334155", fontSize: 13 }}
+              tick={{ fill: "#f1f5f9", fontSize: 13, fontWeight: 600 }}
               axisLine={false}
             />
             <Tooltip
-              cursor={{ fill: "rgba(0,0,0,0.04)" }}
+              cursor={{ fill: "rgba(255,255,255,0.08)" }}
               contentStyle={{
+                background: "rgba(15,23,42,0.9)",
                 borderRadius: "12px",
-                border: "none",
-                boxShadow: "0 20px 40px rgba(0,0,0,0.15)"
+                border: "1px solid rgba(255,255,255,0.15)",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.8)",
+                color: "#fff",
+                fontWeight: 600
               }}
             />
 
             <Bar
               dataKey="stock"
-              radius={[0, 10, 10, 0]}
-              isAnimationActive
+              radius={[0, 12, 12, 0]}
               animationDuration={1200}
             >
               {chartData.map((entry, index) => (
@@ -126,17 +127,17 @@ export default function StockLevels({ inventory = [] }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="flex justify-center gap-10 mt-8 text-sm"
+        className="flex justify-center gap-10 mt-8 text-sm font-semibold"
       >
-        <div className="flex items-center gap-2 text-slate-600">
+        <div className="flex items-center gap-2 text-white/80">
           <span className="w-4 h-4 rounded-full bg-gradient-to-r from-green-500 to-green-300" />
           Optimal
         </div>
-        <div className="flex items-center gap-2 text-slate-600">
+        <div className="flex items-center gap-2 text-white/80">
           <span className="w-4 h-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400" />
           Low
         </div>
-        <div className="flex items-center gap-2 text-slate-600">
+        <div className="flex items-center gap-2 text-white/80">
           <span className="w-4 h-4 rounded-full bg-gradient-to-r from-rose-500 to-red-600" />
           Critical
         </div>
