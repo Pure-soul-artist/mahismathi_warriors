@@ -1,6 +1,20 @@
-venv/
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+venv/
 *.db
 .env
+
+# Node
 node_modules/
 dist/
+.DS_Store
+
+# Vite
+frontend/.env
+frontend/dist/
+
+# IDE
+.vscode/
+*.log
