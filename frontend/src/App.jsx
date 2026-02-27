@@ -37,6 +37,7 @@ export default function App() {
   }, []);
 
   return (
+    /* ===== GLOBAL BACKGROUND ===== */
     <div
       className="min-h-screen bg-cover bg-center bg-fixed relative"
       style={{
@@ -44,22 +45,25 @@ export default function App() {
           "url('https://images.unsplash.com/photo-1628964178609-aec11c666040?q=80&w=1600&auto=format&fit=crop')"
       }}
     >
-      {/* LIGHT OVERLAY (NO BLUR) */}
-      <div className="absolute inset-0 bg-white/65" />
+      {/* GLOBAL LIGHT OVERLAY */}
+      <div className="absolute inset-0 bg-white/70 backdrop-blur-sm" />
 
-      {/* CONTENT */}
+      {/* CONTENT WRAPPER */}
       <div className="relative z-10">
-        {/* HEADER */}
+        {/* ===== HEADER ===== */}
         <motion.div
           initial={{ opacity: 0, y: -25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="
             relative overflow-hidden
-            bg-gradient-to-r from-sky-200/90 via-sky-300/90 to-cyan-300/90
+            bg-gradient-to-r from-sky-200/80 via-sky-300/80 to-cyan-300/80
             px-8 py-10
           "
         >
+          {/* soft glow */}
+          <div className="absolute inset-0 bg-white/40 blur-3xl" />
+
           <div className="relative flex flex-col items-center text-center gap-2">
             <h1
               className="
@@ -81,10 +85,11 @@ export default function App() {
                 transition={{ repeat: Infinity, duration: 1.5 }}
                 className="
                   mt-4
-                  bg-red-500
+                  bg-red-500/90
                   text-white text-xs font-bold
                   px-5 py-2 rounded-full
-                  shadow-md
+                  shadow-lg
+                  backdrop-blur-xl
                 "
               >
                 ⚡ PEAK HOURS ACTIVE
@@ -93,11 +98,11 @@ export default function App() {
           </div>
         </motion.div>
 
-        {/* ALERT */}
+        {/* ALERT BANNER */}
         <AlertBanner inventory={inventory} />
 
         {/* TABS */}
-        <div className="bg-white border-b px-6 flex gap-4 shadow-sm justify-center">
+        <div className="bg-white/90 backdrop-blur border-b px-6 flex gap-4 shadow-sm justify-center">
           {["dashboard", "stock", "inventory", "orders"].map(tab => (
             <button
               key={tab}
