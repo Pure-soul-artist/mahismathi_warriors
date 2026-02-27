@@ -121,7 +121,7 @@ export default function App() {
         )}
 
         {activeTab === "stock" && (
-          <StockLevels inventory={inventory} />
+          <StockLevels inventory={inventory} onFulfill={fetchData}/>
         )}
 
         {activeTab === "inventory" && (

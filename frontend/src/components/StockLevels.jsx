@@ -1,14 +1,8 @@
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
 } from "recharts";
 
-export default function StockLevels({ inventory = [] }) {
+export default function StockLevels({ inventory = [], onFulfill }) {
 
   const chartData = inventory.map(item => ({
     name: item.name,
@@ -22,7 +16,6 @@ export default function StockLevels({ inventory = [] }) {
   return (
     <div className="bg-white rounded-xl shadow p-6">
       <h2 className="text-xl font-bold mb-4">📦 Stock Level View</h2>
-
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={chartData} layout="vertical">
           <XAxis type="number" />
@@ -35,17 +28,10 @@ export default function StockLevels({ inventory = [] }) {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-
       <div className="flex gap-6 mt-4 text-sm text-gray-600">
-        <span className="flex items-center gap-2">
-          <span className="w-3 h-3 bg-green-500 rounded-full"></span> OK
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-3 h-3 bg-orange-500 rounded-full"></span> Low
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-3 h-3 bg-red-500 rounded-full"></span> Critical
-        </span>
+        <span className="flex items-center gap-2"><span className="w-3 h-3 bg-green-500 rounded-full"></span> OK</span>
+        <span className="flex items-center gap-2"><span className="w-3 h-3 bg-orange-500 rounded-full"></span> Low</span>
+        <span className="flex items-center gap-2"><span className="w-3 h-3 bg-red-500 rounded-full"></span> Critical</span>
       </div>
     </div>
   );
