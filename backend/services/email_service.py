@@ -4,7 +4,7 @@ EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 WAREHOUSE_EMAIL = os.getenv("WAREHOUSE_EMAIL")
 
-async def send_restock_email(item_name: str, quantity: int, is_peak: bool):
+async def send_restock_email(item_name: str, quantity: int, is_peak: bool) -> bool:
     if not EMAIL_SENDER or not WAREHOUSE_EMAIL:
         print(f"[EMAIL SKIPPED] Restock: {item_name} x{quantity} {'PEAK' if is_peak else ''}")
         return
@@ -20,5 +20,6 @@ async def send_restock_email(item_name: str, quantity: int, is_peak: bool):
         await aiosmtplib.send(msg, hostname="smtp.gmail.com", port=587,
                               username=EMAIL_SENDER, password=EMAIL_PASSWORD, start_tls=True)
         print(f"Email sent for {item_name}")
+        return True
     except Exception as e:
         print(f"Email failed: {e}")
