@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
-from routes import inventory, orders
+from routes import inventory, orders, chat
 from scheduler import start_scheduler
 
 app = FastAPI()
@@ -20,3 +20,4 @@ async def startup():
 
 app.include_router(inventory.router, prefix="/inventory")
 app.include_router(orders.router, prefix="/orders")
+app.include_router(chat.router, prefix="/chat")
