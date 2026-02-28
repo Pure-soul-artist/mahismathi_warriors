@@ -17,8 +17,8 @@ async def send_restock_email(item_name: str, quantity: int, is_peak: bool) -> bo
         msg["Subject"] = f"Restock: {item_name}{peak_tag}"
         msg["From"] = EMAIL_SENDER
         msg["To"] = WAREHOUSE_EMAIL
-        await aiosmtplib.send(msg, hostname="smtp.gmail.com", port=587,
-                              username=EMAIL_SENDER, password=EMAIL_PASSWORD, start_tls=True)
+        await aiosmtplib.send(msg, hostname="smtp.gmail.com", port=465,
+                              username=EMAIL_SENDER, password=EMAIL_PASSWORD, use_tls=True)
         print(f"Email sent for {item_name}")
         return True
     except Exception as e:
