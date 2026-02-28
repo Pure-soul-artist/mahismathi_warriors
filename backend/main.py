@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import init_db
+from database import init_db, auto_seed
 from routes import inventory, orders, chat
 from scheduler import start_scheduler
 
@@ -19,6 +19,7 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await init_db()
+    await auto_seed()
     start_scheduler()
 
 app.include_router(inventory.router, prefix="/inventory")
