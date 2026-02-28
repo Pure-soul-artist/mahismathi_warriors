@@ -19,3 +19,6 @@ aiosmtplib
 google-generativeai
 twilio
 groq
+bcrypt
+pyjwt
+python-multipart
