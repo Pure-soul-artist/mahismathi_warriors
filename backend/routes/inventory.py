@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Body
 import aiosqlite
 import os
 from datetime import datetime
@@ -25,14 +25,37 @@ async def add_item(item: dict):
     return {"message": "Item added"}
 
 @router.put("/{item_id}")
-async def update_stock(item_id: int, body: dict):
+async def update_stock(item_id: int, current_stock: int = Body(..., embed=True)):
     async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+
+        item = await (await db.execute(
+            "SELECT * FROM inventory_items WHERE id=?", (item_id,)
+        )).fetchone()
+
+        if not item:
+            raise HTTPException(status_code=404, detail="Item not found")
+
+        base = item["base_threshold"]
+
+        if current_stock <= base // 2:
+            new_status = "critical"
+        elif current_stock <= base:
+            new_status = "low"
+        else:
+            new_status = "ok"
+
         await db.execute(
-            "UPDATE inventory_items SET current_stock=?, last_updated=? WHERE id=?",
-            (body["current_stock"], datetime.now().isoformat(), item_id)
+            """UPDATE inventory_items 
+               SET current_stock = ?,
+                   status = ?,
+                   last_updated = CURRENT_TIMESTAMP
+               WHERE id = ?""",
+            (current_stock, new_status, item_id)
         )
         await db.commit()
-    return {"message": "Stock updated"}
+
+    return {"message": "Stock updated", "new_status": new_status}
 
 @router.delete("/{item_id}")
 async def delete_item(item_id: int):
