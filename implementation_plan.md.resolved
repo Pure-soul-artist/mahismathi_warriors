@@ -1,0 +1,44 @@
+# WhatsApp Alert Feature — Implementation Plan
+
+Send a WhatsApp message every time a restock email is triggered, with the same alert details.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Twilio WhatsApp Sandbox is needed (free).** Steps:
+> 1. Sign up at [twilio.com](https://www.twilio.com/try-twilio) (free trial gives $15 credit)
+> 2. Go to **Messaging → Try it out → Send a WhatsApp message**
+> 3. You'll get a sandbox number — send the join code from your WhatsApp to activate it
+> 4. You'll need 3 values for [.env](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/.env):
+>    - `TWILIO_ACCOUNT_SID` 
+>    - `TWILIO_AUTH_TOKEN`
+>    - `WHATSAPP_TO` (your WhatsApp number, e.g. `+919876543210`)
+
+> [!NOTE]
+> The Twilio **WhatsApp Sandbox** is completely free for testing. No credit card needed beyond initial signup.
+
+## Proposed Changes
+
+### Backend
+
+#### [MODIFY] [.env](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/.env)
+- Add `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `WHATSAPP_TO`
+
+#### [MODIFY] [config.py](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/backend/config.py)
+- Load the 3 new Twilio env vars
+
+#### [NEW] [services/whatsapp_service.py](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/backend/services/whatsapp_service.py)
+- `send_restock_whatsapp(item_name, quantity, is_peak)` function
+- Sends a formatted WhatsApp message via Twilio API
+- Gracefully skips if credentials are not configured
+
+#### [MODIFY] [services/order_service.py](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/backend/services/order_service.py)
+- Import and call `send_restock_whatsapp()` right after [send_restock_email()](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/backend/services/email_service.py#7-26)
+
+#### [MODIFY] [requirements.txt](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/backend/requirements.txt)
+- Add `twilio`
+
+## Verification Plan
+1. Add Twilio credentials to [.env](file:///c:/Users/pavan/OneDrive/Desktop/mahismathi/mahismathi_warriors/.env)
+2. Place a manual restock order from the UI
+3. Verify both an email AND a WhatsApp message arrive

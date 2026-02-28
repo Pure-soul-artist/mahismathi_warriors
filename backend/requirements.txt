@@ -17,3 +17,5 @@ uvicorn==0.41.0
 apscheduler
 aiosmtplib
 google-generativeai
+twilio
+groq
