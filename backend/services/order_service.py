@@ -2,6 +2,7 @@ import aiosqlite
 import os
 from services.peak_hours import is_peak_hour
 from services.email_service import send_restock_email
+from services.whatsapp_service import send_whatsapp_alert
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "inventory.db")
 
@@ -22,7 +23,8 @@ async def create_order(item_id: int, triggered_by: str = "auto"):
         peak = is_peak_hour()
 
         await send_restock_email(item["name"], quantity, peak)
-        email_sent = 1 if send_restock_email(item["name"], quantity, peak) else 0
+        send_whatsapp_alert(item["name"], quantity, peak)
+        email_sent = 1 if await send_restock_email(item["name"], quantity, peak) else 0
         await db.execute("""
             INSERT INTO restock_orders (item_id, item_name, quantity_ordered, triggered_by, is_peak_hour, email_sent)
             VALUES (?, ?, ?, ?, ?, ?)

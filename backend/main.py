@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
-from routes import inventory, orders, chat
+from routes import inventory, orders, chat, auth
 from scheduler import start_scheduler
 
 app = FastAPI(title="Inventory Replenishment Agent")
